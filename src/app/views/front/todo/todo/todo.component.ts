@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpService } from 'src/app/views/services/http.service';
 
 @Component({
   selector: 'app-todo',
@@ -6,5 +7,29 @@ import { Component } from '@angular/core';
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent {
+  taskList: any = [];
+  newTask: any = '';
+  dateNow: number = Date.now();
+  status: any = false;
 
+  constructor(private http: HttpService) {}
+
+  ngOnInit() {
+    this.getAllTask();
+  }
+
+  addTasks() {
+    this.http.addTask(this.newTask, this.dateNow, this.status).subscribe(() => {
+      this.newTask = '';
+      this.dateNow;
+      this.status = '';
+      this.getAllTask(); // Update the task list after adding a new task
+    });
+  }
+
+  getAllTask() {
+    this.http
+      .getAllTasks()
+      .subscribe((result: any) => (this.taskList = result));
+  }
 }
